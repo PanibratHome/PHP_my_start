@@ -1,45 +1,46 @@
 <?php
 
 class Router {
-    //put your code here
-    private $routes;
-    private $replaceMask = '/WebShopIlya/index.php';
-    function __construct() {
-        $routesPath = ROOT.'/config/routes.php';
-        $this->routes = include($routesPath);
 
+    // в этой переменной будем хранить наши маршруты
+    private $routes;
+    private $mask;
+
+    public  function  __construct()
+    {
+        $this->routes = include_once(ROOT.'/config/routes.php');
     }
-        
-    public function getURI() {
-        $request = $_SERVER['REQUEST_URI'];
-        $request = str_replace($this->replaceMask, '', $request);
-        $request = trim($request, '/');
-        return $request;
-    }
+
     public function run() {
         $uri = $this->getURI();
-        echo "User called: {$uri}";
-        foreach ($this->routes as $path => $logic) {
-            if($uri === $path){
-                echo "<br>Нашли логику для данного пути:<br>";
-                echo "{$logic}";
+        foreach($this->routes as $path=>$logic){
+
+            if($path===$uri){
+
                 $segments = explode('/', $logic);
-                $controllerName = array_shift($segments);
-                $controllerName = ucfirst($controllerName)."Controller";
-                $controllerFileName = $controllerName.".php";
-                echo "<br>This is Controller:";
-                echo "<br>{$controllerName}";
-                echo "<br>{$controllerFileName}";
-                $actionName =  array_shift($segments);
-                $actionName = $actionName."Action";
-                echo "<br>This is Action: <br>";
-                echo "<br>{$actionName}";
-               
-                include_once (ROOT.'/controllers/'.$controllerFileName);
+                $controller = array_shift($segments);
+                $action     = array_shift($segments);
+
+                $controllerName = ucfirst($controller).'Controller';
+                $controllerFileName = $controllerName.'.php';
+                $actionName     = ucfirst($action).'Action';
+
+                echo "<br>Controller: {$controllerName}";
+                echo "<br>Action: {$actionName}";
+
+
+                include_once(ROOT.'/controllers/'.$controllerFileName);
                 $controller = new $controllerName;
                 $controller->$actionName();
+
             }
         }
     }
-    
+
+    public function getURI() {
+        $request = $_SERVER['REQUEST_URI'];
+        $request = str_replace($this->mask, '', $request);
+        $request = trim($request, '/');
+        return $request;
+    }
 }

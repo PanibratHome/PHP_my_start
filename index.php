@@ -1,8 +1,8 @@
 <?php
 
 //echo dirname(__FILE__);
-
-
+//erpoiwarosaifgpoaisrgpoae
+//dfgdfgdfg
 
 //$string = 'This is a good page 23562346fdshsdhf';
 //$pattern = '/.*good.*/';
