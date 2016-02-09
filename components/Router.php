@@ -27,8 +27,17 @@ class Router {
                 $controllerName = array_shift($segments);
                 $controllerName = ucfirst($controllerName)."Controller";
                 $controllerFileName = $controllerName.".php";
+                echo "<br>This is Controller:";
                 echo "<br>{$controllerName}";
                 echo "<br>{$controllerFileName}";
+                $actionName =  array_shift($segments);
+                $actionName = $actionName."Action";
+                echo "<br>This is Action: <br>";
+                echo "<br>{$actionName}";
+               
+                include_once (ROOT.'/controllers/'.$controllerFileName);
+                $controller = new $controllerName;
+                $controller->$actionName();
             }
         }
     }
